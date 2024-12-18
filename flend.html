@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>포켓몬고 친구 교환</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f3f4f6;
+        }
+        header {
+            background-color: #4CAF50;
+            color: white;
+            text-align: center;
+            padding: 1rem 0;
+        }
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .form-group button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .form-group button:hover {
+            background-color: #45a049;
+        }
+        .friend-list {
+            margin-top: 20px;
+        }
+        .friend-list h2 {
+            margin-bottom: 10px;
+        }
+        .friend-list ul {
+            list-style-type: none;
+            padding: 0;
+</html><!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>포켓몬고 친구 교환</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f3f4f6;
+        }
+        header {
+            background-color: #4CAF50;
+            color: white;
+            text-align: center;
+            padding: 1rem 0;
+        }
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .form-group button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .form-group button:hover {
+            background-color: #45a049;
+        }
+        .friend-list {
+            margin-top: 20px;
+        }
+        .friend-list h2 {
+            margin-bottom: 10px;
+        }
+        .friend-list ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        .friend-list li {
+            background-color: #f9f9f9;
+            margin-bottom: 10px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .copyable {
+            cursor: pointer;
+            color: blue;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>포켓몬고 친구 교환</h1>
+    </header>
+    <div class="container">
+        <div class="form-group">
+            <label for="trainerName">트레이너 이름</label>
+            <input type="text" id="trainerName" placeholder="트레이너 이름을 입력하세요">
+        </div>
+        <div class="form-group">
+            <label for="friendCode">트레이너 코드</label>
+            <input type="text" id="friendCode" placeholder="트레이너 코드를 입력하세요">
+        </div>
+        <div class="form-group">
+            <label for="openTalkName">오픈톡 닉네임</label>
+            <input type="text" id="openTalkName" placeholder="오픈톡 닉네임을 입력하세요">
+        </div>
+        <div class="form-group">
+            <button onclick="addFriend()">친구 추가</button>
+        </div>
+
+        <div class="friend-list">
+            <h2>등록된 친구들</h2>
+            <ul id="friendList">
+                <!-- Friend entries will appear here -->
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        function getSavedFriends() {
+            return JSON.parse(localStorage.getItem('friends')) || [];
+        }
+
+        function saveFriends(friends) {
+            localStorage.setItem('friends', JSON.stringify(friends));
+        }
+
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                alert('복사되었습니다: ' + text);
+            }).catch(err => {
+                alert('복사에 실패했습니다: ' + err);
+            });
+        }
+
+        function addFriend() {
+            const trainerName = document.getElementById('trainerName').value;
+            const friendCode = document.getElementById('friendCode').value;
+            const openTalkName = document.getElementById('openTalkName').value;
+
+            if (trainerName && friendCode && openTalkName) {
+                const friends = getSavedFriends();
+                friends.push({ trainerName, friendCode, openTalkName });
+                saveFriends(friends);
+                renderFriends();
+
+                // Clear the input fields
+                document.getElementById('trainerName').value = '';
+                document.getElementById('friendCode').value = '';
+                document.getElementById('openTalkName').value = '';
+            } else {
+                alert('모든 필드를 입력해주세요.');
+            }
+        }
+
+        function renderFriends() {
+            const friendList = document.getElementById('friendList');
+            friendList.innerHTML = '';
+            const friends = getSavedFriends();
+
+            friends.forEach(friend => {
+                const listItem = document.createElement('li');
+                listItem.innerHTML = `
+                    <span class="copyable" onclick="copyToClipboard('${friend.trainerName}')">트레이너 이름: ${friend.trainerName}</span>, 
+                    <span class="copyable" onclick="copyToClipboard('${friend.friendCode}')">코드: ${friend.friendCode}</span>, 
+                    오픈톡: ${friend.openTalkName}`;
+                friendList.appendChild(listItem);
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', renderFriends);
+    </script>
+</body>
+</html>
